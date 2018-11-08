@@ -1,0 +1,23 @@
+<% provide(:title,"Log in") %>
+<h1>Log in</h1>
+
+<div class="row">
+ <div class="col-md-6 col-md-offset-3" >
+
+ <!--form_for/フォームの開始、終了タグを生成-->
+ <%= form_for(:session,url: login_path) do |f|  %>
+    
+    <%= f.label :email %>
+    <!--emailのテキストボックスを表示/fotm_controlはtextboxを横幅いっぱいに表示-->
+    <%= f.email_field :email, class:'form_control' %>
+
+    <%= f.label :password %>
+    <!--passwordのテキストボックスを表示-->
+    <%= f.password_field :password,class: 'form_control'%>
+    <!--サブミットボタンを生成-->
+    <%= f.submit "Log in",class:"btn btn-primary" %>
+    <%end%>
+<!--Sign up now!にリンク先指定/signup_path(新規ユーザー登録)に飛ぶ-->
+    <p>New user? <%=link_to "Sign up now!",signup_path%></p>
+    </div>
+  </div>
