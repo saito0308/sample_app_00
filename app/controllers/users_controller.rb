@@ -1,16 +1,19 @@
 class UsersController < ApplicationController
 
- def show
+
+def show
  @user = User.find(params[:id])
 end
 
-  def new
+
+def new
   @user = User.new
   end
 
+
 #ユーザー新規登録
-  def create
-   @user = User.new(user_params)
+def create
+  @user = User.new(user_params)
    if @user.save
 #登録したユーザーをそのままログインさせておく
      log_in @user
@@ -21,6 +24,10 @@ end
       render 'new'
     end
    end
+
+
+
+
 
    private
 

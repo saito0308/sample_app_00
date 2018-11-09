@@ -42,8 +42,40 @@ end
  assert_select "a[href=?]",user_path(@user)
   end
 
-test "login with valid information followed by logout" do
- get login_path
 
+
+
+test "login with valid information followed by logout" do
+#ログイン用のパスを開く
+ get login_path
+ post login_path, params: { session: {email: @user.email,
+                  password: 'password'}}
+ #テストユーザーがログイン中なのかの確認
+ assert is_logged_in?
+ #ログインしてるからユーザページに飛ぶ
+ assert_redirected_to @user
+ follow_redirect!
+ #テンプレート(ユーザーページ)が表示されているかの確認
+ assert_template 'users/show'
+ #(ログインしたから)ログインリンクがないことの確認
+ assert_select "a[href=?]",login_path, count: 0
+#ログアウト用のパスがあるか
+ assert_select "a[href=?]",logout_path
+#プロフィール用のリンクが存在するか
+ assert_select "a[href=?]",user_path(@user)
+#ログアウトするdelerリクエストを送ることでログイン中のユーザー情報を消す
+  delete logout_path
+#ログアウトしたのでユーザーがログインしていないかの確認
+assert_not is_logged_in?
+#ホームのページにリダイレクト
+assert_redirected_to root_url
+follow_redirect!
+#ログアウトしたのでログインパスが表示されているか
+assert_select "a[href=?]",login_path
+#ログアウトパスが存在していないか
+assert_select "a[href=?]",logout_path, count: 0
+#userページのパスが表示されていないか
+assert_select "a[href=?]",user_path(@user),count: 0
+ end
 end
 
