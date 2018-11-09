@@ -69,6 +69,8 @@ test "login with valid information followed by logout" do
 assert_not is_logged_in?
 #ホームのページにリダイレクト
 assert_redirected_to root_url
+#２番目にウィンドウでログアウトをクリックするユーザーをシュミレートする
+delete logout_path
 follow_redirect!
 #ログアウトしたのでログインパスが表示されているか
 assert_select "a[href=?]",login_path
@@ -77,5 +79,22 @@ assert_select "a[href=?]",logout_path, count: 0
 #userページのパスが表示されていないか
 assert_select "a[href=?]",user_path(@user),count: 0
  end
+
+test "login with remembering" do
+#永続ログインチェックボックスがオンの状態でログイン
+ log_in_as(@user, remember_me: '1')
+#永続ログインが有効になっているので、rmember_tokenが存在する（空じゃない）
+ assert_equal cookies['remember_token'], assigns(:user).remember_token
+end
+
+ test "login without remembering" do
+#クッキーを保存してログイン
+ log_in_as(@user, remember_me: '1')
+ delete logout_path
+#クッキーを削除してログイン
+ log_in_as(@user, remember_me: '0')
+ assert_empty cookies['remember_token']
+ end
+
 end
 

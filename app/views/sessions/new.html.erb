@@ -14,6 +14,12 @@
     <%= f.label :password %>
     <!--passwordのテキストボックスを表示-->
     <%= f.password_field :password,class: 'form_control'%>
+    
+    <%= f.label :remember_me, class: "checkbox inline" do  %>
+     <%= f.check_box :remember_me  %>
+     <span>Remember me on this computer</span>
+     <% end  %>
+    
     <!--サブミットボタンを生成-->
     <%= f.submit "Log in",class:"btn btn-primary" %>
     <%end%>
