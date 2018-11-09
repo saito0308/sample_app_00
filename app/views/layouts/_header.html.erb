@@ -13,7 +13,9 @@
     </a>
      <ul class="dropdown-menu">
           <li><%= link_to "Profile", current_user %></li>
-          <li><%= link_to "Settings", '#' %></li>
+  <!--下、ユーザー情報の更新-->
+  <!--current_userでユーザーの正しい情報をDB内から引っこ抜いてきている-->
+          <li><%= link_to "Settings", 'edit_user_path(current_user)' %></li>
           <li class="divider"></li>
               <li>
                 <%= link_to "Log out", logout_path, method: :delete %>

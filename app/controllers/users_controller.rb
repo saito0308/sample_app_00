@@ -25,6 +25,24 @@ def create
     end
    end
 
+#ユーザー情報の編集ページ
+ def edit
+#ログインしているユーザーの情報をidで引っこ抜いてくる
+  @user = User.find(params[:id])
+end
+
+#ユーザー情報更新
+def update
+#更新したユーザーのデータを取得
+ @user = User.find(params[:id])
+  if @user.update_attributes(user_params)
+#更新に失敗した場合を扱う(ex.パスワードが６桁以下だったとか)
+    else
+#ページを移動させないでそのまま編集ページを表示
+       render 'edit'
+ end
+end
+
 
 
 
