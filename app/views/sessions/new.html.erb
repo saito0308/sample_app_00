@@ -12,6 +12,7 @@
     <%= f.email_field :email, class:'form_control' %>
 
     <%= f.label :password %>
+    <%=link_to "(forgot password)", new_password_reset_path  %>
     <!--passwordのテキストボックスを表示-->
     <%= f.password_field :password,class: 'form_control'%>
     
