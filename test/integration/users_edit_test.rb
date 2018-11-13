@@ -2,23 +2,60 @@ require 'test_helper'
 
 class UsersEditTest < ActionDispatch::IntegrationTest
 
-def setup
-#テスト用アカウントを使用
- @uesr = users(:michael)
+ def setup
+    @user = users(:michael)
+  end
+
+  test "unsuccessful edit" do
+#ゲストユーザーとしてログインするlog_in_as
+    log_in_as(@user)
+    get edit_user_path(@user)
+    assert_template 'users/edit'
+    patch user_path(@user), params: { user: { name:  "",
+                                              email: "foo@invalid",
+                                              password:              "foo",
+                                              password_confirmation: "bar" } }
+
+    assert_template 'users/edit'
+  end
+
+#編集の成功に対するテスト
+test "successful edit" do
+ log_in_as(@user)
+ get edit_user_path(@user)
+ assert_template 'users/edit'
+#正しい更新情報を記入（パスワードは変更しない）
+ name = "Foo Bar"
+ email = "foo@bar.com"
+ patch user_path(@user),params: {user:{ name: name,
+                       email: email,
+                       password:     "",
+                       password_confirmation:""}}
+#アラートの表記はないか
+ assert_not flash.empty?
+ assert_redirected_to @user
+ #reloadメゾットで変更後の最新のユーザー情報を取得
+ @user.reload
+ assert_equal name, @user.name
+ assert_equal email,@user.email
  end
 
-#ユーザー情報の更新に失敗した時のテスト
- test "unsuccessful edit" do
-#ユーザー編集ページを開く
-  get edit_user_path(@user)
-#編集ページのHTMLが表示されているか確認
-  assert_template 'users/edit'
-#提出された情報が不適切なもの
-  patch user_path(@user),params:{ user: { name: "",
-                                 email: "foo@invalid",
-                                 password:    "foo",
-                                 password_confirmation: "bar" } }
-#別ベージに移動しないで編集画面のまま止まっているかの確認
- assert_template 'users/edit'
-  end
+test "successful edit with friendly forwarding" do
+ get edit_user_path(@user)
+ log_in_as(@user)
+ assert_redirected_to edit_user_url(@user)
+ name = "Foo Bar"
+ email = "foo@bar.com"
+ patch user_path(@user),params:{ user:{ name: name,
+      email: email,
+      password:              "",
+      password_confirmation: "" } }
+ assert_not flash.empty?
+ assert_redirected_to @user
+ @user.reload
+ assert_equal name,@user.name
+ assert_equal email,@user.email
+ end
+
+
 end
