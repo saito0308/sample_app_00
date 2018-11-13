@@ -9,6 +9,7 @@ def create
 #もしuser(取得したセッションのメールアドレス)と取得したパスワードがどちらも存在していたら
 #authenticateメゾット＝has_secure_passwordを定義して使えるメゾット。認証に失敗したらfalseを返す
    if user && user.authenticate(params[:session][:password])
+     if user.activated?
      log_in user
 #永続ログインのチェックボックスがオンの時は１、オフの時は０になる
       params[:session][:remember_me] == '1' ? remember(user) : forget(user)
@@ -16,7 +17,13 @@ def create
       #redirect_user = （rails自動変換）user_url(user)/各ユーザーページに飛ぶ
      redirect_back_or user
    else
+     message = "Account not activated."
+     message += "Check your email for the activation link."
+     flash[:warnig] = message
+     redirect_to root_url
+    end
 #nowはその後リクエストが発生した時に消滅（何か更新が会った時）
+  else 
     flash.now[:danger] = 'Invalid email/password combination'
 #エラーメッセージを作成する
    render 'new'

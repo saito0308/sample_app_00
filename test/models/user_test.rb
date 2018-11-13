@@ -79,6 +79,6 @@ test "email addresses should be unique" do
 
 #ユーザーが複数ブラウザでログインし、片方のブラウザでログアウトした時のエラーテスト
    test "authenticated? should return false for a user with nil digest" do
-    assert_not  @user.authenticated?('')
+    assert_not  @user.authenticated?(:remember,'')
   end
 end
